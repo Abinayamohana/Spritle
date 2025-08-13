@@ -1,10 +1,16 @@
 import React, { useContext } from "react";
-import { View, Button, TextInput, Alert, Image, Text } from "react-native";
+import {
+  View,
+  Alert,
+  Image,
+  Text,
+} from "react-native";
 import global from "../styles/global";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AppContext } from "../context/AppContext";
 import { Ionicons } from "@expo/vector-icons";
+import { Button, TextInput } from 'react-native-paper';
 import {
   TouchableOpacity,
   KeyboardAvoidingView,
@@ -13,7 +19,6 @@ import {
 } from "react-native";
 
 export default function RegisterScreen({ navigation }) {
-
   const [showPassword, setShowPassword] = React.useState(false);
   // Access the context to get the registerUser function
   const { registerUser } = useContext(AppContext);
@@ -56,7 +61,6 @@ export default function RegisterScreen({ navigation }) {
           keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 70}
         >
           <ScrollView
-            // contentContainerStyle={global.scrollContainer}
             keyboardShouldPersistTaps="handled" // Allows tapping outside to dismiss keyboard
           >
             <View style={global.container}>
@@ -65,11 +69,13 @@ export default function RegisterScreen({ navigation }) {
                   source={require("../../assets/login.jpg")}
                   style={global.logoImage}
                 />
+                <Text style={global.heading}>Sign Up! </Text>
 
                 {/* Name */}
                 <TextInput
                   style={global.input}
-                  placeholder="Name"
+                  mode="outlined"
+                  label="Name"
                   value={values.name}
                   onChangeText={handleChange("name")}
                   onBlur={handleBlur("name")}
@@ -81,7 +87,8 @@ export default function RegisterScreen({ navigation }) {
                 {/* Email */}
                 <TextInput
                   style={global.input}
-                  placeholder="Email"
+                  mode="outlined"
+                  label="Email"
                   value={values.email}
                   onChangeText={handleChange("email")}
                   onBlur={handleBlur("email")}
@@ -91,32 +98,27 @@ export default function RegisterScreen({ navigation }) {
                 )}
 
                 {/* Password */}
-              <View style={global.inputContainer}>
-                <TextInput
-                  style={global.inputBox}
-                  placeholder="Password"
-                  secureTextEntry={!showPassword}
-                  value={values.password}
-                  onChangeText={handleChange("password")}
-                  onBlur={handleBlur("password")}
-                />
-                <TouchableOpacity
-                  onPress={() => setShowPassword(!showPassword)}
-                >
-                  <Ionicons
-                    name={showPassword ? "eye" : "eye-off"}
-                    size={20}
-                    color="#666"
+                  <TextInput
+                    style={global.input}
+                    mode="outlined"
+                    label="Password"
+                    secureTextEntry={!showPassword}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    right={
+                    <TextInput.Icon
+                      icon={showPassword ? "eye" : "eye-off"}
+                      onPress={() => setShowPassword(!showPassword)}
+                    />}
                   />
-                </TouchableOpacity>
-                </View>
                 {touched.password && errors.password && (
                   <Text style={global.error}>{errors.password}</Text>
                 )}
 
                 {/*  Force touched on submit */}
                 <Button
-                  title="Register"
+                  mode="contained"
                   onPress={() => {
                     setTouched({
                       name: true,
@@ -125,7 +127,9 @@ export default function RegisterScreen({ navigation }) {
                     });
                     handleSubmit();
                   }}
-                />
+                >
+                 Register
+                </Button>
                 <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                   <Text style={global.linkText}>
                     Already have an account? Login

@@ -4,23 +4,15 @@ export default StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 8,
-    paddingHorizontal: 12,
     marginBottom: 12,
-    backgroundColor: "#eef2f5",
   },
-  inputBox: {
-    flex: 1,
-    height: 45,
-    fontSize: 16,
-    color: "#333",
-  },
+
    logoImage: {
     padding: 40,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
+    
   },
   heading: {
     fontSize: 28,
@@ -55,14 +47,9 @@ export default StyleSheet.create({
 
   },
   input: { 
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#eef2f5',
     marginBottom: 12, 
-    padding: 12, 
     borderRadius: 8, 
     fontSize: 16,
-    elevation: 1
   },
   error: { 
     color: '#d9534f', 
@@ -79,15 +66,13 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f5f7fa',
-    elevation: 4,
+    backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOpacity: 0.2,
+    elevation:3,
     shadowRadius: 8,
     marginTop: 40,
     marginBottom: 40,
     borderRadius: 20,
-    backgroundColor: '#fff',
     alignSelf: 'center'
   },
   title: {
@@ -132,6 +117,7 @@ detailsCard: {
   shadowRadius: 5,
   elevation: 3,
   marginBottom: 0,
+  width: 300,
 },
 detailLabel: {
   fontSize: 16,
@@ -151,7 +137,7 @@ iconContainer: {
 },
 iconButton: {
   marginHorizontal: 20,
-  backgroundColor: "#f1ddddff",
+  backgroundColor: "#d2b9f5ff",
   padding: 8,
   borderRadius: 50,
 },

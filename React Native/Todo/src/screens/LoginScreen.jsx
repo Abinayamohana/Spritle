@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
-import { View, Button, TextInput, Alert, Image } from 'react-native';
+import { View, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, } from 'react-native';
 import global from '../styles/global'
 import { Formik } from 'formik';
 import { AppContext } from '../context/AppContext';
 import { TouchableOpacity, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { KeyboardAvoidingView, Platform, ScrollView, } from 'react-native';
+import { Button, TextInput } from 'react-native-paper';
 
 // Login screen component
 export default function LoginScreen({ navigation }) {
@@ -47,34 +46,37 @@ export default function LoginScreen({ navigation }) {
           <Text style={global.heading}>Welcome Back !</Text>
           {/* Email input */}
           <TextInput
+            mode='outlined'
             style={global.input}
-            placeholder="Email"
+            label="Email"
             value={props.values.email}
             onChangeText={props.handleChange('email')}
           />
+
           {/* Password input with show/hide toggle */}
-          <View style={global.inputContainer}>
           <TextInput
-            style={global.inputBox}
-            placeholder="Password"
+            style={global.input}
+            mode='outlined'
+            label="Password"
             secureTextEntry={!showPassword}
             value={props.values.password}
             onChangeText={props.handleChange('password')}
+            right = {
+              <TextInput.Icon
+                icon={showPassword ? "eye" : "eye-off"}
+                onPress={() => setShowPassword(!showPassword)}
+            />}
           />
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <Ionicons
-              name={showPassword ? "eye" : "eye-off"}
-              size={20}
-              color="#666"
-            />
-          </TouchableOpacity>
-          </View>
+
           {/* Login button */}
           <Button
-          title="Login"
+          icon="login"
+          mode='contained'
+          
           onPress={props.handleSubmit}
-          color="#2196F3"
-          />
+        
+          >Login</Button>
+        
           {/* Link to registration screen */}
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={global.linkText}>Don't have an account? Register</Text>

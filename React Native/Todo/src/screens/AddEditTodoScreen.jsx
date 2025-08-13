@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 import {
   View,
-  TextInput,
   StyleSheet,
   Modal,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Text,
+  TextInput,
 } from "react-native";
 import { Formik } from "formik";
 import { AppContext } from "../context/AppContext";
@@ -22,7 +22,7 @@ export default function AddEditTodoScreen({ navigation, route }) {
   const handleClose = () => navigation.goBack();
 
   return (
-      <Modal animationType="slide" transparent={true} visible={true}>
+      <Modal animationType="slide" transparent={true} visible={true} onRequestClose={handleClose}>
         <TouchableWithoutFeedback onPress={handleClose}>
         <View style={styles.overlay}>
           <View style={styles.modalContainer}>
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 
   },
   submitBtn: {
-    backgroundColor: "red",
+    backgroundColor: "#b38bebff",
     paddingVertical: 12,
     borderRadius: 8,
   },
