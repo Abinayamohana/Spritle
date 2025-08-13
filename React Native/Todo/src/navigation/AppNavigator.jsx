@@ -9,6 +9,7 @@ import AddEditTodoScreen from '../screens/AddEditTodoScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { AppContext } from '../context/AppContext';
 
+
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
@@ -27,6 +28,7 @@ export default function AppNavigator() {
             <Stack.Screen name="TodoList" component={TodoListScreen} />
             <Stack.Screen name="AddEditTodo" component={AddEditTodoScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
+
           </>
         )}
       </Stack.Navigator>
