@@ -5,10 +5,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import TodoListScreen from '../screens/TodoListScreen';
-import AddEditTodoScreen from '../screens/AddEditTodoScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { AppContext } from '../context/AppContext';
 
+import Toast from 'react-native-toast-message';
+import { Platform } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -26,12 +27,12 @@ export default function AppNavigator() {
         ) : (
           <>
             <Stack.Screen name="TodoList" component={TodoListScreen} />
-            <Stack.Screen name="AddEditTodo" component={AddEditTodoScreen} />
             <Stack.Screen name="Profile" component={ProfileScreen} />
 
           </>
         )}
       </Stack.Navigator>
+        <Toast />
     </NavigationContainer>
   );
 }

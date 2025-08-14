@@ -4,29 +4,35 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
   TouchableWithoutFeedback,
   Text,
   TextInput,
+  Keyboard,
 } from "react-native";
 import { Formik } from "formik";
 import { AppContext } from "../context/AppContext";
 import { Ionicons } from "@expo/vector-icons";
 
 // Add / Edit modal screen component
-export default function AddEditTodoScreen({ navigation, route }) {
+export default function AddEditTodoScreen({ onClose, todo }) {
   const { addTodo, updateTodo } = useContext(AppContext);
-  const todo = route.params?.todo;
   const isEdit = !!todo;
 
-  // close the modal and go back
-  const handleClose = () => navigation.goBack();
-
   return (
-      <Modal animationType="slide" transparent={true} visible={true} onRequestClose={handleClose}>
-        <TouchableWithoutFeedback onPress={handleClose}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        backgroundColor: "rgba(146, 128, 162, 0.5)",
+      }}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.overlay}>
           <View style={styles.modalContainer}>
-            <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
               <Ionicons name="close" size={24} color="gray" />
             </TouchableOpacity>
             <Text style={styles.title}>
@@ -35,38 +41,72 @@ export default function AddEditTodoScreen({ navigation, route }) {
 
             {/*  Formik handles form state and submission */}
             <Formik
-              initialValues={{ 
+              initialValues={{
                 title: todo?.title || "",
-                body: todo?.body || ""
-
-               }}
+                body: todo?.body || "",
+              }}
+              // Validates text box is empty
+              validate={(values) => {
+                const errors = {};
+                if (!values.title.trim()) {
+                  errors.title = "Title is required";
+                }
+                return errors;
+              }}
               onSubmit={(values) => {
                 if (isEdit) {
-                  updateTodo(todo.id, { ...todo, title: values.title, body: values.body });
+                  updateTodo(todo.id, {
+                    ...todo,
+                    title: values.title,
+                    body: values.body,
+                    completed: false,
+                  });
                 } else {
-                  addTodo({ id: Date.now(), title: values.title, body: values.body });
+                  addTodo({
+                    id: Date.now(),
+                    title: values.title,
+                    body: values.body,
+                    completed: false,
+                  });
                 }
-                navigation.goBack();
+                onClose();
               }}
             >
-              {({ handleChange, handleSubmit, values }) => (
-                <View style={styles.container}>
+              {({
+                handleChange,
+                handleSubmit,
+                values,
+                errors,
+                touched,
+                setFieldTouched,
+              }) => (
+                <View>
                   <TextInput
                     style={styles.input}
                     placeholder="Enter title"
                     value={values.title}
                     onChangeText={handleChange("title")}
+                    onBlur={() => setFieldTouched("title")}
                   />
+                  {touched.title && errors.title && (
+                    <Text style={{ color: "red", marginBottom: 10 }}>
+                      {errors.title}
+                    </Text>
+                  )}
                   <TextInput
-                    style={ [styles.input, styles.bodyInput]}
+                    style={[styles.input, styles.bodyInput]}
                     placeholder="Enter details"
                     value={values.body}
                     onChangeText={handleChange("body")}
-                    multiline 
+                    multiline
                   />
                   <TouchableOpacity
-                    style={styles.submitBtn}
+                    style={[
+                      styles.submitBtn,
+                      !values.title.trim() && { backgroundColor: "#ccc" }, // disable style
+                    ]}
                     onPress={handleSubmit}
+                    disabled={!values.title.trim()}
                   >
                     <Text style={styles.submitText}>
                       {isEdit ? "Update" : "Add"}
@@ -77,9 +117,8 @@ export default function AddEditTodoScreen({ navigation, route }) {
             </Formik>
           </View>
         </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -114,8 +153,7 @@ const styles = StyleSheet.create({
   },
   bodyInput: {
     height: 100,
-    textAlignVertical: 'top'
-
+    textAlignVertical: "top",
   },
   submitBtn: {
     backgroundColor: "#b38bebff",

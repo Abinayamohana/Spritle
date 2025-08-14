@@ -24,11 +24,10 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 12,
     marginBottom: 15,
-    elevation: 5,
+    borderRadius: 8,
   },
   searchbar: {
     borderRadius: 12,
-    elevation: 4,
     backgroundColor: "#fff",
   },
   input: {

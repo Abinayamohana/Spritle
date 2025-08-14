@@ -6,13 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
+  Modal,
 } from "react-native";
+import Animated, { FadeInDown, FadeOutUp } from "react-native-reanimated";
 import { AppContext } from "../context/AppContext";
-import { Ionicons} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Swipeable } from "react-native-gesture-handler";
 import SearchBar from "../components/SearchBar";
 import { KeyboardAvoidingView } from "react-native";
-
+import AddEditTodoScreen from "../components/AddEditTodoScreen";
+import { TouchableWithoutFeedback } from "react-native";
 
 // Main Todo List screen
 export default function TodoListScreen({ navigation }) {
@@ -21,6 +24,9 @@ export default function TodoListScreen({ navigation }) {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTodos, setFilteredTodos] = useState(todos); //initially view the todo
+
+  const [isModalVisible, setIsModalVisible] = useState(false); // For the modal open in the same screen
+  const [selectedTodo, setSelectedTodo] = useState(null);
 
   // Update filtered todos when search query or todos change
   useEffect(() => {
@@ -45,7 +51,12 @@ export default function TodoListScreen({ navigation }) {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => navigation.navigate("AddEditTodo")}>
+        <TouchableOpacity
+          onPress={() => {
+            setIsModalVisible(true);
+            setSelectedTodo(null); // clear previous selection
+          }}
+        >
           <Ionicons
             name="add-circle"
             size={50}
@@ -91,43 +102,58 @@ export default function TodoListScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <TodoItem
       item={item}
-      navigation={navigation}
       handleMoveToBottom={handleMoveToBottom}
       handleDelete={handleDelete}
+      onEdit={(todo) => {
+        setSelectedTodo(todo);
+        setIsModalVisible(true);
+      }}
     />
   );
 
   // Main render
   return (
- 
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.container}>
-        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
-        {/* Show empty state if no todos */}
-        {filteredTodos.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Ionicons name="happy-outline" size={60} color="#6200ee" />
-            <Text style={styles.emptyText}>You're all caught up!</Text>
-          </View>
-        ) : (
-          <FlatList
-            data={filteredTodos}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={renderItem}
-          />
-        )}
-      </View>
-    </KeyboardAvoidingView>
+    <>
+      {/* Modal  */}
+      <Modal
+        visible={isModalVisible}
+        transparent
+        animationType="none"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
+        <AddEditTodoScreen
+          onClose={() => setIsModalVisible(false)}
+          todo={selectedTodo}
+        />
+      </Modal>
 
-
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.container}>
+          <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+          {/* Show empty state if no todos */}
+          {filteredTodos.length === 0 ? (
+            <View style={styles.emptyState}>
+              <Ionicons name="happy-outline" size={60} color="#6200ee" />
+              <Text style={styles.emptyText}>You're all caught up!</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={filteredTodos}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderItem}
+            />
+          )}
+        </View>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 
 // Todo item component with swipe actions
-function TodoItem({ item, navigation, handleMoveToBottom, handleDelete }) {
+function TodoItem({ item, onEdit, handleMoveToBottom, handleDelete }) {
   const swipeRef = React.useRef(null);
 
   // Render swipe left actions (move & delete)
@@ -177,9 +203,7 @@ function TodoItem({ item, navigation, handleMoveToBottom, handleDelete }) {
             </View>
           </View>
           {/* Edit todo button */}
-          <TouchableOpacity
-            onPress={() => navigation.navigate("AddEditTodo", { todo: item })}
-          >
+          <TouchableOpacity onPress={() => onEdit(item)}>
             <Ionicons name="create" size={24} color="#6200ee" />
           </TouchableOpacity>
         </View>
@@ -201,8 +225,8 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 10,
     borderRadius: 8,
-    elevation: 2,
-    shadowColor: "#000",
+    elevation: 7,
+    shadowColor: "#6200ee",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -273,5 +297,25 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  animatedModalContent: {
+    width: "90%",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    padding: 20,
+    maxHeight: "80%",
+    elevation: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
 });
