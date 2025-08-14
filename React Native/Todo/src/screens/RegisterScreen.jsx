@@ -9,7 +9,6 @@ import global from "../styles/global";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { AppContext } from "../context/AppContext";
-import { Ionicons } from "@expo/vector-icons";
 import { Button, TextInput } from 'react-native-paper';
 import {
   TouchableOpacity,
@@ -119,6 +118,9 @@ export default function RegisterScreen({ navigation }) {
                 {/*  Force touched on submit */}
                 <Button
                   mode="contained"
+                  buttonColor="#b38bebff"
+                  textColor="white"
+                  labelStyle={{ fontWeight: 'bold', fontSize: 18 }}
                   onPress={() => {
                     setTouched({
                       name: true,
@@ -130,7 +132,7 @@ export default function RegisterScreen({ navigation }) {
                 >
                  Register
                 </Button>
-                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <TouchableOpacity onPress={() => navigation.pop()}>
                   <Text style={global.linkText}>
                     Already have an account? Login
                   </Text>

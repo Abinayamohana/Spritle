@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { AppContext } from '../context/AppContext';
 import { TouchableOpacity, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
+import Toast from 'react-native-toast-message';
 
 // Login screen component
 export default function LoginScreen({ navigation }) {
@@ -20,12 +21,44 @@ export default function LoginScreen({ navigation }) {
         // Attempt login with provided credentials
         const success = await loginUser(values.email, values.password);
         if (success) {
-          Alert.alert('Login Successful', 'Welcome!');
-          navigation.replace('TodoList'); //  Navigate to TodoList on success
+          Toast.show({
+            type: 'success',
+            text1: 'Login Successfully',
+            text2: 'Welcome back!',
+            position: 'top',
+            visibilityTime: 3000,
+            text1Style: {
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#000'
+            },
+            text2Style: {
+              fontSize:14,
+              color: '#6200ee'
+            },
+
+          })
+          
         } else {
-          Alert.alert('Invalid Credentials', 'Please check your email or password');
+          Toast.show({
+            type: 'error',
+            text1: 'Invalid Credentials',
+            text2: 'Please check your email or password',
+            position: 'top',
+            visibilityTime: 3000,
+            text1Style: {
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#000'
+            },
+            text2Style: {
+              fontSize:14,
+              color: '#6200ee'
+            },
+
+          })
         }
-      }}      
+      }}                
     >
       {( props ) => (
 
@@ -44,6 +77,9 @@ export default function LoginScreen({ navigation }) {
             style={global.logoImage} />
 
           <Text style={global.heading}>Welcome Back !</Text>
+
+
+
           {/* Email input */}
           <TextInput
             mode='outlined'
@@ -72,7 +108,9 @@ export default function LoginScreen({ navigation }) {
           <Button
           icon="login"
           mode='contained'
-          
+          buttonColor="#b38bebff"
+          textColor="white"
+          labelStyle={{ fontWeight: 'bold', fontSize: 18 }}
           onPress={props.handleSubmit}
         
           >Login</Button>
@@ -84,6 +122,7 @@ export default function LoginScreen({ navigation }) {
           </View>
         </View>
         </ScrollView>
+        
         </KeyboardAvoidingView>
 
       )}
@@ -91,4 +130,3 @@ export default function LoginScreen({ navigation }) {
 
   );
 }
-

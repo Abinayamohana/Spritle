@@ -24,7 +24,7 @@ export default StyleSheet.create({
 
   linkText: {
     marginTop: 20,
-    color: '#4CAF50',
+    color: '#b38bebff',
     textAlign: 'center',
     fontSize: 16,
     textDecorationLine: 'underline',
